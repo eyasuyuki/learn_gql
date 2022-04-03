@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"github.com/99designs/gqlgen/graphql"
+	"github.com/eyasuyuki/learn_gql/dataloader"
+	"github.com/eyasuyuki/learn_gql/graph/model"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"log"
 	"net/http"
@@ -22,7 +24,22 @@ func main() {
 		port = defaultPort
 	}
 
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
+	companyLoader := dataloader.NewCompanyLoader(dataloader.CompanyLoaderConfig{
+		MaxBatch: 100,
+		Wait: 2,
+		Fetch: func(keys []string) ([]*model.Company, []error) {
+			companies := make([]*model.Company, len(keys))
+			errors := make([]error, len(keys))
+
+			// TODO fettch data
+
+			return companies, errors
+		},
+	})
+
+	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{
+		CompanyLoader: companyLoader,
+	}}))
 	srv.SetErrorPresenter(func(ctx context.Context, e error) *gqlerror.Error {
 		err := graphql.DefaultErrorPresenter(ctx, e)
 		err.Message = e.Error()
