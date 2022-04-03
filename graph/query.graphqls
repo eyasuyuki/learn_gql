@@ -1,0 +1,15 @@
+type Query {
+    company(id: ID!): Company
+    companies(limit: Int!, offset: Int): CompanyPagination!
+    department(id: ID!): Department
+    departments(limit: Int!, offset: Int): DepertmentPagination!
+    employee(id: ID!): Employee
+    employees(
+        limit: Int!,
+        offset: Int,
+        email: String,
+        gender: Gender,
+        isManager: Boolean,
+        hasDepartment: Boolean
+    ): EmployeePagination!
+}

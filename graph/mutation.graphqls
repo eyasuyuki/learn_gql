@@ -1,0 +1,52 @@
+type Mutanion {
+    createCompany(input: CreateCompanyInput!): Company!
+    updateCompany(input: UpdateCompanyInput!): Company!
+    deleteCompany(id: ID!): Boolean!
+    createDepartment(input: CreateDepartmentInput!): Department!
+    updateDepartment(input: UpdateDepartmentInput!): Department!
+    deleteDepartment(id: ID!): Boolean!
+    createEmployee(input: CreateEmployeeInput!): Employee!
+    updateEmployee(input: UpdateEmployeeInput!): Employee!
+    deleteEmployee(id: ID!): Boolean!
+}
+
+input CreateCompanyInput {
+    companyName: String!
+    representative: String!
+    phoneNumber: String!
+}
+
+input UpdateCompanyInput {
+    id: ID!
+    companyName: String!
+    representative: String!
+    phoneNumber: String!
+}
+
+input CreateDepartmentInput {
+    departmentName: String!
+    email: String!
+}
+
+input UpdateDepartmentInput {
+    id: ID!
+    departmentName: String!
+    email: String!
+}
+
+input CreateEmployeeInput {
+    name: String!
+    gender: Gender!
+    email: String!
+    dependentsNum: Int!
+    isManager: Boolean!
+}
+
+input UpdateEmployeeInput {
+    id: ID!
+    name: String!
+    gender: Gender!
+    email: String!
+    dependentsNum: Int!
+    isManager: Boolean!
+}

@@ -1,0 +1,12 @@
+type Department implements Node {
+    id: ID!
+    departmentName: String!
+    email: String!
+    company: Company!
+    employees: EmployeePagination!
+}
+
+type DepertmentPagination implements PaginationInfo {
+    pageInfo: PaginationInfo!
+    nodes: [Department!]!
+}
