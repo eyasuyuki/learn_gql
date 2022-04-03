@@ -17,7 +17,7 @@ enum Gender {
     Female
 }
 
-type EmployeePagination implements PaginationInfo {
+type EmployeePagination implements Pagination {
     pageInfo: PaginationInfo!
     nodes: [Employee!]!
 }

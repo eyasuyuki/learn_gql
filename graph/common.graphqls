@@ -4,7 +4,7 @@ interface Node {
 
 scalar Timestamp
 
-interface PaginationInfo {
+interface Pagination {
     pageInfo: PaginationInfo!
     nodes: [Node!]!
 }

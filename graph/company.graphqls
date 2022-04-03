@@ -7,7 +7,7 @@ type Company implements Node {
     employees: EmployeePagination!
 }
 
-type CompanyPagination implements PaginationInfo {
+type CompanyPagination implements Pagination {
     pageInfo: PaginationInfo!
     nodes: [Company!]!
 }

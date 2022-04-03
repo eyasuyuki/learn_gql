@@ -6,7 +6,7 @@ type Department implements Node {
     employees: EmployeePagination!
 }
 
-type DepertmentPagination implements PaginationInfo {
+type DepertmentPagination implements Pagination {
     pageInfo: PaginationInfo!
     nodes: [Department!]!
 }
