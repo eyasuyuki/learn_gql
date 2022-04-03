@@ -70,21 +70,6 @@ type DepertmentPagination struct {
 
 func (DepertmentPagination) IsPagination() {}
 
-type Employee struct {
-	ID            string `json:"id"`
-	Name          string `json:"name"`
-	Gender        Gender `json:"gender"`
-	Email         string `json:"email"`
-	LatestLoginAt string `json:"latestLoginAt"`
-	//  扶養家族の人数
-	DependenstNum int `json:"dependenstNum"`
-	//  管理職かどうか
-	IsManager  bool        `json:"isManager"`
-	Department *Department `json:"department"`
-	Company    *Company    `json:"company"`
-}
-
-func (Employee) IsNode() {}
 
 type EmployeePagination struct {
 	PageInfo *PaginationInfo `json:"pageInfo"`
