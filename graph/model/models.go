@@ -1,5 +1,23 @@
 package model
 
+type Company struct {
+	ID             string                `json:"id"`
+	CompanyName    string                `json:"companyName"`
+	Representative string                `json:"representative"`
+	PhoneNumber    string                `json:"phoneNumber"`
+}
+
+func (Company) IsNode() {}
+
+type Department struct {
+	ID             string              `json:"id"`
+	DepartmentName string              `json:"departmentName"`
+	Email          string              `json:"email"`
+}
+
+func (Department) IsNode() {}
+
+
 type Employee struct {
 	ID            string `json:"id"`
 	Name          string `json:"name"`
@@ -15,3 +33,4 @@ type Employee struct {
 }
 
 func (Employee) IsNode() {}
+
