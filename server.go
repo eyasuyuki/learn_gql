@@ -3,9 +3,9 @@ package main
 import (
 	"context"
 	"github.com/99designs/gqlgen/graphql"
-	"github.com/eyasuyuki/learn_gql/dataloader"
-	"github.com/eyasuyuki/learn_gql/graph/model"
 	"github.com/vektah/gqlparser/v2/gqlerror"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 	"log"
 	"net/http"
 	"os"
@@ -18,27 +18,39 @@ import (
 
 const defaultPort = "8080"
 
+const defaultDsn = "learngql:learngql@tcp(127.0.0.1:3306)/learndb?charset=utf8&parseTime=True&loc=Local"
+
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
 	}
 
-	companyLoader := dataloader.NewCompanyLoader(dataloader.CompanyLoaderConfig{
-		MaxBatch: 100,
-		Wait: 2,
-		Fetch: func(keys []string) ([]*model.Company, []error) {
-			companies := make([]*model.Company, len(keys))
-			errors := make([]error, len(keys))
+	dsn := os.Getenv("DATA_SET_NAME")
+	if dsn == "" {
+		dsn = defaultDsn
+	}
 
-			// TODO fettch data
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		panic(any(err))
+	}
+	if db == nil {
+		panic(any(err))
+	}
+	defer func() {
+		if db != nil {
+			sqlDb, err := db.DB()
+			if err != nil {
+				panic(any(err))
+			}
+			sqlDb.Close()
+		}
+	}()
 
-			return companies, errors
-		},
-	})
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{
-		CompanyLoader: companyLoader,
+		DB: db,
 	}}))
 	srv.SetErrorPresenter(func(ctx context.Context, e error) *gqlerror.Error {
 		err := graphql.DefaultErrorPresenter(ctx, e)
@@ -51,7 +63,7 @@ func main() {
 	})
 
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
-	http.Handle("/query", srv)
+	http.Handle("/q             uery", srv)
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
