@@ -46,3 +46,4 @@ autobind:
 
 # ```mutation.resolver.go```が生成されない?
 
+原因はtypoだった。Mutationの綴りが間違っていた。訂正したら生成された。
