@@ -56,18 +56,6 @@ type EmployeePagination struct {
 
 func (EmployeePagination) IsPagination() {}
 
-type Mutanion struct {
-	CreateCompany    *Company    `json:"createCompany"`
-	UpdateCompany    *Company    `json:"updateCompany"`
-	DeleteCompany    bool        `json:"deleteCompany"`
-	CreateDepartment *Department `json:"createDepartment"`
-	UpdateDepartment *Department `json:"updateDepartment"`
-	DeleteDepartment bool        `json:"deleteDepartment"`
-	CreateEmployee   *Employee   `json:"createEmployee"`
-	UpdateEmployee   *Employee   `json:"updateEmployee"`
-	DeleteEmployee   bool        `json:"deleteEmployee"`
-}
-
 type PaginationInfo struct {
 	Page             int  `json:"page"`
 	PaginationLength int  `json:"paginationLength"`

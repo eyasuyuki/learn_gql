@@ -1,4 +1,4 @@
-type Mutanion {
+type Mutation {
     createCompany(input: CreateCompanyInput!): Company!
     updateCompany(input: UpdateCompanyInput!): Company!
     deleteCompany(id: ID!): Boolean!
