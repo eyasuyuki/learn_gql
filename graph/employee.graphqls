@@ -5,7 +5,7 @@ type Employee implements Node {
     email: String!
     latestLoginAt: Timestamp!
     """ 扶養家族の人数 """
-    dependenstNum: Int!
+    dependentsNum: Int!
     """ 管理職かどうか """
     isManager: Boolean!
     department: Department!

@@ -16,6 +16,17 @@ type Pagination interface {
 	IsPagination()
 }
 
+type Company struct {
+	ID             string                `json:"id"`
+	CompanyName    string                `json:"companyName"`
+	Representative string                `json:"representative"`
+	PhoneNumber    string                `json:"phoneNumber"`
+	Departments    *DepertmentPagination `json:"departments"`
+	Employees      *EmployeePagination   `json:"employees"`
+}
+
+func (Company) IsNode() {}
+
 type CompanyPagination struct {
 	PageInfo *PaginationInfo `json:"pageInfo"`
 	Nodes    []*Company      `json:"nodes"`
@@ -42,6 +53,16 @@ type CreateEmployeeInput struct {
 	IsManager     bool   `json:"isManager"`
 }
 
+type Department struct {
+	ID             string              `json:"id"`
+	DepartmentName string              `json:"departmentName"`
+	Email          string              `json:"email"`
+	Company        *Company            `json:"company"`
+	Employees      *EmployeePagination `json:"employees"`
+}
+
+func (Department) IsNode() {}
+
 type DepertmentPagination struct {
 	PageInfo *PaginationInfo `json:"pageInfo"`
 	Nodes    []*Department   `json:"nodes"`
@@ -49,6 +70,21 @@ type DepertmentPagination struct {
 
 func (DepertmentPagination) IsPagination() {}
 
+type Employee struct {
+	ID            string `json:"id"`
+	Name          string `json:"name"`
+	Gender        Gender `json:"gender"`
+	Email         string `json:"email"`
+	LatestLoginAt string `json:"latestLoginAt"`
+	//  扶養家族の人数
+	DependentsNum int `json:"dependentsNum"`
+	//  管理職かどうか
+	IsManager  bool        `json:"isManager"`
+	Department *Department `json:"department"`
+	Company    *Company    `json:"company"`
+}
+
+func (Employee) IsNode() {}
 
 type EmployeePagination struct {
 	PageInfo *PaginationInfo `json:"pageInfo"`
