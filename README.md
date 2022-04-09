@@ -26,3 +26,19 @@ https://qiita.com/hiroyky/items/4d7764172e73ff54f18b#%E3%82%B3%E3%83%BC%E3%83%89
 上記のように自動生成されたモデルを再定義しても、再生成の都度にmodels_gen.goにまた同じモデルが生成されてしまう。
 
 これは毎回手作業で削除するってことなんだろうか。
+
+#### 重複定義の解決
+
+再定義したモデルが自動生成で重複定義されないためには、```gqlgen.yml```で以下を定義する必要がある。
+
+```
+autobind:
+#  - "github.com/eyasuyuki/learn_gql/graph/model"
+```
+
+自分のリポジトリへのautbindのコメントを解除する。
+
+```
+autobind:
+  - "github.com/eyasuyuki/learn_gql/graph/model"
+```
