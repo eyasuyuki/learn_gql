@@ -69,7 +69,7 @@ type ComplexityRoot struct {
 		ID             func(childComplexity int) int
 	}
 
-	DepertmentPagination struct {
+	DepartmentPagination struct {
 		Nodes    func(childComplexity int) int
 		PageInfo func(childComplexity int) int
 	}
@@ -123,7 +123,7 @@ type ComplexityRoot struct {
 }
 
 type CompanyResolver interface {
-	Departments(ctx context.Context, obj *model.Company) (*model.DepertmentPagination, error)
+	Departments(ctx context.Context, obj *model.Company) (*model.DepartmentPagination, error)
 	Employees(ctx context.Context, obj *model.Company) (*model.EmployeePagination, error)
 }
 type DepartmentResolver interface {
@@ -149,7 +149,7 @@ type QueryResolver interface {
 	Company(ctx context.Context, id string) (*model.Company, error)
 	Companies(ctx context.Context, limit int, offset *int) (*model.CompanyPagination, error)
 	Department(ctx context.Context, id string) (*model.Department, error)
-	Departments(ctx context.Context, limit int, offset *int) (*model.DepertmentPagination, error)
+	Departments(ctx context.Context, limit int, offset *int) (*model.DepartmentPagination, error)
 	Employee(ctx context.Context, id string) (*model.Employee, error)
 	Employees(ctx context.Context, limit int, offset *int, email *string, gender *model.Gender, isManager *bool, hasDepartment *bool) (*model.EmployeePagination, error)
 }
@@ -260,19 +260,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Department.ID(childComplexity), true
 
-	case "DepertmentPagination.nodes":
-		if e.complexity.DepertmentPagination.Nodes == nil {
+	case "DepartmentPagination.nodes":
+		if e.complexity.DepartmentPagination.Nodes == nil {
 			break
 		}
 
-		return e.complexity.DepertmentPagination.Nodes(childComplexity), true
+		return e.complexity.DepartmentPagination.Nodes(childComplexity), true
 
-	case "DepertmentPagination.pageInfo":
-		if e.complexity.DepertmentPagination.PageInfo == nil {
+	case "DepartmentPagination.pageInfo":
+		if e.complexity.DepartmentPagination.PageInfo == nil {
 			break
 		}
 
-		return e.complexity.DepertmentPagination.PageInfo(childComplexity), true
+		return e.complexity.DepartmentPagination.PageInfo(childComplexity), true
 
 	case "Employee.company":
 		if e.complexity.Employee.Company == nil {
@@ -662,7 +662,7 @@ type PaginationInfo {
     companyName: String!
     representative: String!
     phoneNumber: String!
-    departments: DepertmentPagination!
+    departments: DepartmentPagination!
     employees: EmployeePagination!
 }
 
@@ -678,7 +678,7 @@ type CompanyPagination implements Pagination {
     employees: EmployeePagination!
 }
 
-type DepertmentPagination implements Pagination {
+type DepartmentPagination implements Pagination {
     pageInfo: PaginationInfo!
     nodes: [Department!]!
 }`, BuiltIn: false},
@@ -761,7 +761,7 @@ input UpdateEmployeeInput {
     company(id: ID!): Company
     companies(limit: Int!, offset: Int): CompanyPagination!
     department(id: ID!): Department
-    departments(limit: Int!, offset: Int): DepertmentPagination!
+    departments(limit: Int!, offset: Int): DepartmentPagination!
     employee(id: ID!): Employee
     employees(
         limit: Int!,
@@ -1290,9 +1290,9 @@ func (ec *executionContext) _Company_departments(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.DepertmentPagination)
+	res := resTmp.(*model.DepartmentPagination)
 	fc.Result = res
-	return ec.marshalNDepertmentPagination2ᚖgithubᚗcomᚋeyasuyukiᚋlearn_gqlᚋgraphᚋmodelᚐDepertmentPagination(ctx, field.Selections, res)
+	return ec.marshalNDepartmentPagination2ᚖgithubᚗcomᚋeyasuyukiᚋlearn_gqlᚋgraphᚋmodelᚐDepartmentPagination(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Company_employees(ctx context.Context, field graphql.CollectedField, obj *model.Company) (ret graphql.Marshaler) {
@@ -1575,7 +1575,7 @@ func (ec *executionContext) _Department_employees(ctx context.Context, field gra
 	return ec.marshalNEmployeePagination2ᚖgithubᚗcomᚋeyasuyukiᚋlearn_gqlᚋgraphᚋmodelᚐEmployeePagination(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _DepertmentPagination_pageInfo(ctx context.Context, field graphql.CollectedField, obj *model.DepertmentPagination) (ret graphql.Marshaler) {
+func (ec *executionContext) _DepartmentPagination_pageInfo(ctx context.Context, field graphql.CollectedField, obj *model.DepartmentPagination) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1583,7 +1583,7 @@ func (ec *executionContext) _DepertmentPagination_pageInfo(ctx context.Context, 
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "DepertmentPagination",
+		Object:     "DepartmentPagination",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -1610,7 +1610,7 @@ func (ec *executionContext) _DepertmentPagination_pageInfo(ctx context.Context, 
 	return ec.marshalNPaginationInfo2ᚖgithubᚗcomᚋeyasuyukiᚋlearn_gqlᚋgraphᚋmodelᚐPaginationInfo(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _DepertmentPagination_nodes(ctx context.Context, field graphql.CollectedField, obj *model.DepertmentPagination) (ret graphql.Marshaler) {
+func (ec *executionContext) _DepartmentPagination_nodes(ctx context.Context, field graphql.CollectedField, obj *model.DepartmentPagination) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1618,7 +1618,7 @@ func (ec *executionContext) _DepertmentPagination_nodes(ctx context.Context, fie
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "DepertmentPagination",
+		Object:     "DepartmentPagination",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -2775,9 +2775,9 @@ func (ec *executionContext) _Query_departments(ctx context.Context, field graphq
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.DepertmentPagination)
+	res := resTmp.(*model.DepartmentPagination)
 	fc.Result = res
-	return ec.marshalNDepertmentPagination2ᚖgithubᚗcomᚋeyasuyukiᚋlearn_gqlᚋgraphᚋmodelᚐDepertmentPagination(ctx, field.Selections, res)
+	return ec.marshalNDepartmentPagination2ᚖgithubᚗcomᚋeyasuyukiᚋlearn_gqlᚋgraphᚋmodelᚐDepartmentPagination(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_employee(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -4437,13 +4437,13 @@ func (ec *executionContext) _Pagination(ctx context.Context, sel ast.SelectionSe
 			return graphql.Null
 		}
 		return ec._CompanyPagination(ctx, sel, obj)
-	case model.DepertmentPagination:
-		return ec._DepertmentPagination(ctx, sel, &obj)
-	case *model.DepertmentPagination:
+	case model.DepartmentPagination:
+		return ec._DepartmentPagination(ctx, sel, &obj)
+	case *model.DepartmentPagination:
 		if obj == nil {
 			return graphql.Null
 		}
-		return ec._DepertmentPagination(ctx, sel, obj)
+		return ec._DepartmentPagination(ctx, sel, obj)
 	case model.EmployeePagination:
 		return ec._EmployeePagination(ctx, sel, &obj)
 	case *model.EmployeePagination:
@@ -4693,19 +4693,19 @@ func (ec *executionContext) _Department(ctx context.Context, sel ast.SelectionSe
 	return out
 }
 
-var depertmentPaginationImplementors = []string{"DepertmentPagination", "Pagination"}
+var departmentPaginationImplementors = []string{"DepartmentPagination", "Pagination"}
 
-func (ec *executionContext) _DepertmentPagination(ctx context.Context, sel ast.SelectionSet, obj *model.DepertmentPagination) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, depertmentPaginationImplementors)
+func (ec *executionContext) _DepartmentPagination(ctx context.Context, sel ast.SelectionSet, obj *model.DepartmentPagination) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, departmentPaginationImplementors)
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("DepertmentPagination")
+			out.Values[i] = graphql.MarshalString("DepartmentPagination")
 		case "pageInfo":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._DepertmentPagination_pageInfo(ctx, field, obj)
+				return ec._DepartmentPagination_pageInfo(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -4715,7 +4715,7 @@ func (ec *executionContext) _DepertmentPagination(ctx context.Context, sel ast.S
 			}
 		case "nodes":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._DepertmentPagination_nodes(ctx, field, obj)
+				return ec._DepartmentPagination_nodes(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
@@ -5863,18 +5863,18 @@ func (ec *executionContext) marshalNDepartment2ᚖgithubᚗcomᚋeyasuyukiᚋlea
 	return ec._Department(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNDepertmentPagination2githubᚗcomᚋeyasuyukiᚋlearn_gqlᚋgraphᚋmodelᚐDepertmentPagination(ctx context.Context, sel ast.SelectionSet, v model.DepertmentPagination) graphql.Marshaler {
-	return ec._DepertmentPagination(ctx, sel, &v)
+func (ec *executionContext) marshalNDepartmentPagination2githubᚗcomᚋeyasuyukiᚋlearn_gqlᚋgraphᚋmodelᚐDepartmentPagination(ctx context.Context, sel ast.SelectionSet, v model.DepartmentPagination) graphql.Marshaler {
+	return ec._DepartmentPagination(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNDepertmentPagination2ᚖgithubᚗcomᚋeyasuyukiᚋlearn_gqlᚋgraphᚋmodelᚐDepertmentPagination(ctx context.Context, sel ast.SelectionSet, v *model.DepertmentPagination) graphql.Marshaler {
+func (ec *executionContext) marshalNDepartmentPagination2ᚖgithubᚗcomᚋeyasuyukiᚋlearn_gqlᚋgraphᚋmodelᚐDepartmentPagination(ctx context.Context, sel ast.SelectionSet, v *model.DepartmentPagination) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
 		}
 		return graphql.Null
 	}
-	return ec._DepertmentPagination(ctx, sel, v)
+	return ec._DepartmentPagination(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNEmployee2githubᚗcomᚋeyasuyukiᚋlearn_gqlᚋgraphᚋmodelᚐEmployee(ctx context.Context, sel ast.SelectionSet, v model.Employee) graphql.Marshaler {

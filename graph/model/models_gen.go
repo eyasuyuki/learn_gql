@@ -42,12 +42,12 @@ type CreateEmployeeInput struct {
 	IsManager     bool   `json:"isManager"`
 }
 
-type DepertmentPagination struct {
+type DepartmentPagination struct {
 	PageInfo *PaginationInfo `json:"pageInfo"`
 	Nodes    []*Department   `json:"nodes"`
 }
 
-func (DepertmentPagination) IsPagination() {}
+func (DepartmentPagination) IsPagination() {}
 
 type EmployeePagination struct {
 	PageInfo *PaginationInfo `json:"pageInfo"`

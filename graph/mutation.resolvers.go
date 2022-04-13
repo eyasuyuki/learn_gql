@@ -5,46 +5,75 @@ package graph
 
 import (
 	"context"
-	"fmt"
 
+	"github.com/eyasuyuki/learn_gql/database"
 	"github.com/eyasuyuki/learn_gql/graph/generated"
 	"github.com/eyasuyuki/learn_gql/graph/model"
 )
 
 func (r *mutationResolver) CreateCompany(ctx context.Context, input model.CreateCompanyInput) (*model.Company, error) {
-	panic(fmt.Errorf("not implemented"))
+	company := database.NewCompany(input)
+	r.DB.Create(company)
+	result := model.NewCompany(company)
+	return result, nil
 }
 
 func (r *mutationResolver) UpdateCompany(ctx context.Context, input model.UpdateCompanyInput) (*model.Company, error) {
-	panic(fmt.Errorf("not implemented"))
+	company := database.NewCompanyUpdate(input)
+	r.DB.Save(company)
+	result := model.NewCompany(company)
+	return result, nil
 }
 
 func (r *mutationResolver) DeleteCompany(ctx context.Context, id string) (bool, error) {
-	panic(fmt.Errorf("not implemented"))
+	idInt, err := database.IdFromBase64(database.COMPANY_PREFIX, id)
+	if err != nil {
+		return false, err
+	}
+	r.DB.Delete(&database.Company{}, idInt)
+	return true, nil
 }
 
 func (r *mutationResolver) CreateDepartment(ctx context.Context, input model.CreateDepartmentInput) (*model.Department, error) {
-	panic(fmt.Errorf("not implemented"))
+	department := database.NewDepartment(input)
+	r.DB.Create(department)
+	return model.NewDepartment(department), nil
 }
 
 func (r *mutationResolver) UpdateDepartment(ctx context.Context, input model.UpdateDepartmentInput) (*model.Department, error) {
-	panic(fmt.Errorf("not implemented"))
+	department := database.NewDepartmentUpdate(input)
+	r.DB.Save(department)
+	return model.NewDepartment(department), nil
 }
 
 func (r *mutationResolver) DeleteDepartment(ctx context.Context, id string) (bool, error) {
-	panic(fmt.Errorf("not implemented"))
+	idInt, err := database.IdFromBase64(database.DEPARTMENT_PREFIX, id)
+	if err != nil {
+		return false, err
+	}
+	r.DB.Delete(&database.Department{}, idInt)
+	return true, nil
 }
 
 func (r *mutationResolver) CreateEmployee(ctx context.Context, input model.CreateEmployeeInput) (*model.Employee, error) {
-	panic(fmt.Errorf("not implemented"))
+	employee := database.NewEmployee(input)
+	r.DB.Create(employee)
+	return model.NewEmployee(employee), nil
 }
 
 func (r *mutationResolver) UpdateEmployee(ctx context.Context, input model.UpdateEmployeeInput) (*model.Employee, error) {
-	panic(fmt.Errorf("not implemented"))
+	employee := database.NewEmployeeUpdate(input)
+	r.DB.Save(employee)
+	return model.NewEmployee(employee), nil
 }
 
 func (r *mutationResolver) DeleteEmployee(ctx context.Context, id string) (bool, error) {
-	panic(fmt.Errorf("not implemented"))
+	idInt, err := database.IdFromBase64(database.EMPLOYEE_PREFIX, id)
+	if err != nil {
+		return false, err
+	}
+	r.DB.Delete(&database.Employee{}, idInt)
+	return true, nil
 }
 
 // Mutation returns generated.MutationResolver implementation.

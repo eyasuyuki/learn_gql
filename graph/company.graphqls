@@ -3,7 +3,7 @@ type Company implements Node {
     companyName: String!
     representative: String!
     phoneNumber: String!
-    departments: DepertmentPagination!
+    departments: DepartmentPagination!
     employees: EmployeePagination!
 }
 
