@@ -5,6 +5,7 @@ package graph
 
 import (
 	"context"
+	"time"
 
 	"github.com/eyasuyuki/learn_gql/database"
 	"github.com/eyasuyuki/learn_gql/graph/generated"
@@ -12,14 +13,14 @@ import (
 )
 
 func (r *mutationResolver) CreateCompany(ctx context.Context, input model.CreateCompanyInput) (*model.Company, error) {
-	company := database.NewCompany(input)
+	company := &database.Company{CompanyName: input.CompanyName, PhoneNumber: input.PhoneNumber}
 	r.DB.Create(company)
 	result := model.NewCompany(company)
 	return result, nil
 }
 
 func (r *mutationResolver) UpdateCompany(ctx context.Context, input model.UpdateCompanyInput) (*model.Company, error) {
-	company := database.NewCompanyUpdate(input)
+	company := database.NewCompanyUpdate(input.ID, input.CompanyName, input.Representative, input.PhoneNumber)
 	r.DB.Save(company)
 	result := model.NewCompany(company)
 	return result, nil
@@ -35,13 +36,13 @@ func (r *mutationResolver) DeleteCompany(ctx context.Context, id string) (bool, 
 }
 
 func (r *mutationResolver) CreateDepartment(ctx context.Context, input model.CreateDepartmentInput) (*model.Department, error) {
-	department := database.NewDepartment(input)
+	department := &database.Department{DepartmentName: input.DepartmentName, Email: input.Email}
 	r.DB.Create(department)
 	return model.NewDepartment(department), nil
 }
 
 func (r *mutationResolver) UpdateDepartment(ctx context.Context, input model.UpdateDepartmentInput) (*model.Department, error) {
-	department := database.NewDepartmentUpdate(input)
+	department := database.NewDepartmentUpdate(input.ID, input.DepartmentName, input.Email)
 	r.DB.Save(department)
 	return model.NewDepartment(department), nil
 }
@@ -56,13 +57,13 @@ func (r *mutationResolver) DeleteDepartment(ctx context.Context, id string) (boo
 }
 
 func (r *mutationResolver) CreateEmployee(ctx context.Context, input model.CreateEmployeeInput) (*model.Employee, error) {
-	employee := database.NewEmployee(input)
+	employee := &database.Employee{Name: input.Name, Gender: string(input.Gender), Email: input.Email, DependentsNum: input.DependentsNum, IsManager: input.IsManager}
 	r.DB.Create(employee)
 	return model.NewEmployee(employee), nil
 }
 
 func (r *mutationResolver) UpdateEmployee(ctx context.Context, input model.UpdateEmployeeInput) (*model.Employee, error) {
-	employee := database.NewEmployeeUpdate(input)
+	employee := database.NewEmployeeUpdate(input.ID, input.Name, string(input.Gender), input.Email, time.Now(), input.DependentsNum, input.IsManager)
 	r.DB.Save(employee)
 	return model.NewEmployee(employee), nil
 }

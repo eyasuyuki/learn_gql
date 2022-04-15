@@ -2,7 +2,6 @@ package database
 
 import (
 	"encoding/base64"
-	"github.com/eyasuyuki/learn_gql/graph/model"
 	"strconv"
 	"time"
 )
@@ -20,16 +19,12 @@ type Company struct {
 	PhoneNumber    string
 }
 
-func NewCompany(input model.CreateCompanyInput) *Company {
-	return &Company{CompanyName: input.CompanyName, Representative: input.Representative, PhoneNumber: input.PhoneNumber}
-}
-
-func NewCompanyUpdate(input model.UpdateCompanyInput) *Company {
-	idInt, err := IdFromBase64(COMPANY_PREFIX, input.ID)
+func NewCompanyUpdate(id string, companyName string, representative string, phoneNumber string) *Company {
+	idInt, err := IdFromBase64(COMPANY_PREFIX, id)
 	if err != nil {
 		panic(any(err))
 	}
-	return &Company{ID: idInt, CompanyName: input.CompanyName, Representative: input.Representative, PhoneNumber: input.PhoneNumber}
+	return &Company{ID: idInt, CompanyName: companyName, Representative: representative, PhoneNumber: phoneNumber}
 }
 
 type Department struct {
@@ -38,16 +33,12 @@ type Department struct {
 	Email          string
 }
 
-func NewDepartment(input model.CreateDepartmentInput) *Department {
-	return &Department{DepartmentName: input.DepartmentName, Email: input.Email}
-}
-
-func NewDepartmentUpdate(input model.UpdateDepartmentInput) *Department {
-	idInt, err := IdFromBase64(DEPARTMENT_PREFIX, input.ID)
+func NewDepartmentUpdate(id string, departmentName string, email string) *Department {
+	idInt, err := IdFromBase64(DEPARTMENT_PREFIX, id)
 	if err != nil {
 		panic(any(err))
 	}
-	return &Department{ID: idInt, DepartmentName: input.DepartmentName, Email: input.Email}
+	return &Department{ID: idInt, DepartmentName: departmentName, Email: email}
 }
 
 type Employee struct {
@@ -64,16 +55,12 @@ type Employee struct {
 	CompanyID    string
 }
 
-func NewEmployee(input model.CreateEmployeeInput) *Employee {
-	return &Employee{Name: input.Name, Gender: string(input.Gender), Email: input.Email, LatestLoginAt: time.Now(), DependentsNum: input.DependentsNum, IsManager: input.IsManager}
-}
-
-func NewEmployeeUpdate(input model.UpdateEmployeeInput) *Employee {
-	idInt, err := IdFromBase64(DEPARTMENT_PREFIX, input.ID)
+func NewEmployeeUpdate(id string, name string, gender string, email string, lastLoginAt time.Time, dependentsNum int, isManager bool) *Employee {
+	idInt, err := IdFromBase64(DEPARTMENT_PREFIX, id)
 	if err != nil {
 		panic(any(err))
 	}
-	return &Employee{ID: idInt, Name: input.Name, Gender: string(input.Gender), Email: input.Email, LatestLoginAt: time.Now(), DependentsNum: input.DependentsNum, IsManager: input.IsManager}
+	return &Employee{ID: idInt, Name: name, Gender: gender, Email: email, LatestLoginAt: lastLoginAt, DependentsNum: dependentsNum, IsManager: isManager}
 }
 
 func IdFromBase64(prefix string, id string) (int64,error) {
