@@ -47,3 +47,23 @@ autobind:
 # ```mutation.resolver.go```が生成されない?
 
 原因はtypoだった。Mutationの綴りが間違っていた。訂正したら生成された。
+
+# テストを書く
+
+とりあえず ```graph/model/models_test.go````は書いたが、resolverのテストをどう書けば良いのか分からない。
+
+https://github.com/99designs/gqlgen/blob/master/TESTING.md
+
+これはgqlgenそのもののテストのことで、gqlgenで生成したサーバーのテストではないし。
+
+## GraphQLのクエリを自動的にテストする - Qiita
+
+https://qiita.com/pocke/items/bfe120f07bd8d94724a7
+
+その後これを見つけたがRuby書きたくない。
+
+## timqian/gql-generator: Generate queries from graphql schema, used for writing api test.
+
+https://github.com/timqian/gql-generator
+
+これやってみよう。
