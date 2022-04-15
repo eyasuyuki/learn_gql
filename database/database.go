@@ -35,16 +35,12 @@ type Department struct {
 	CompanyID		int64
 }
 
-func NewDepartmentUpdate(id string, departmentName string, email string, companyID string) *Department {
+func NewDepartmentUpdate(id string, departmentName string, email string) *Department {
 	idInt, err := IdFromBase64(DEPARTMENT_PREFIX, id)
 	if err != nil {
 		panic(any(err))
 	}
-	companyIDInt, err := IdFromBase64(COMPANY_PREFIX, companyID)
-	if err != nil {
-		panic(any(err))
-	}
-	return &Department{ID: idInt, DepartmentName: departmentName, Email: email, CompanyID: companyIDInt}
+	return &Department{ID: idInt, DepartmentName: departmentName, Email: email}
 }
 
 type Employee struct {
@@ -61,16 +57,8 @@ type Employee struct {
 	CompanyID    int64
 }
 
-func NewEmployeeUpdate(id string, name string, gender string, email string, lastLoginAt string, dependentsNum int, isManager bool, departmentID string, companyID string) *Employee {
+func NewEmployeeUpdate(id string, name string, gender string, email string, lastLoginAt string, dependentsNum int, isManager bool) *Employee {
 	idInt, err := IdFromBase64(EMPLOYEE_PREFIX, id)
-	if err != nil {
-		panic(any(err))
-	}
-	departmentIDInt, err := IdFromBase64(DEPARTMENT_PREFIX, departmentID)
-	if err != nil {
-		panic(any(err))
-	}
-	companyIDInt, err := IdFromBase64(COMPANY_PREFIX, companyID)
 	if err != nil {
 		panic(any(err))
 	}
@@ -78,7 +66,7 @@ func NewEmployeeUpdate(id string, name string, gender string, email string, last
 	if err != nil {
 		panic(any(err))
 	}
-	return &Employee{ID: idInt, Name: name, Gender: gender, Email: email, LatestLoginAt: lastLoginAtTime, DependentsNum: dependentsNum, IsManager: isManager, DepartmentID: departmentIDInt, CompanyID: companyIDInt}
+	return &Employee{ID: idInt, Name: name, Gender: gender, Email: email, LatestLoginAt: lastLoginAtTime, DependentsNum: dependentsNum, IsManager: isManager}
 }
 
 func IdFromBase64(prefix string, id string) (int64,error) {

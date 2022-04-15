@@ -48,7 +48,7 @@ func TestNewDepartment(t *testing.T) {
 	if departmentModel.Email != department.Email {
 		t.Errorf("email invalid")
 	}
-	department2 := database.NewDepartmentUpdate(departmentModel.ID, departmentModel.DepartmentName, departmentModel.Email, departmentModel.CompanyID)
+	department2 := database.NewDepartmentUpdate(departmentModel.ID, departmentModel.DepartmentName, departmentModel.Email)
 	if department.ID != department2.ID {
 		t.Errorf("id2 invalid")
 	}
@@ -58,14 +58,12 @@ func TestNewDepartment(t *testing.T) {
 	if department.Email != department2.Email {
 		t.Errorf("email2 invalid")
 	}
-	if department.CompanyID != department2.CompanyID {
-		t.Errorf("companyID2 invalid")
-	}
 }
 
 
 func TestNewEmployee(t *testing.T) {
-	employee := database.Employee{ID: 3, Name: "玉井詩織", Gender: string(GenderFemale), Email: "nobody@example.com", LatestLoginAt: time.Now(), DependentsNum: 4, IsManager: true, DepartmentID: 2, CompanyID: 1}
+	utc, _ := time.LoadLocation("UTC")
+	employee := database.Employee{ID: 3, Name: "玉井詩織", Gender: string(GenderFemale), Email: "nobody@example.com", LatestLoginAt: time.Now().In(utc), DependentsNum: 4, IsManager: true, DepartmentID: 2, CompanyID: 1}
 	employeeModel := NewEmployee(&employee)
 	if employeeModel.ID == "" {
 		t.Errorf("id invalid")
@@ -86,7 +84,7 @@ func TestNewEmployee(t *testing.T) {
 	if employeeModel.IsManager != employee.IsManager {
 		t.Errorf("isManager invalid")
 	}
-	employee2 := database.NewEmployeeUpdate(employeeModel.ID, employeeModel.Name, string(employeeModel.Gender), employeeModel.Email, employeeModel.LatestLoginAt, employeeModel.DependentsNum, employeeModel.IsManager, employeeModel.DepartmentID, employeeModel.CompanyID)
+	employee2 := database.NewEmployeeUpdate(employeeModel.ID, employeeModel.Name, string(employeeModel.Gender), employeeModel.Email, employeeModel.LatestLoginAt, employeeModel.DependentsNum, employeeModel.IsManager)
 	if employee.ID != employee2.ID {
 		t.Errorf("id2 invalid")
 	}
@@ -107,12 +105,6 @@ func TestNewEmployee(t *testing.T) {
 	}
 	if employee.IsManager != employee2.IsManager {
 		t.Errorf("isManage2 invalid")
-	}
-	if employee.DepartmentID != employee2.DepartmentID {
-		t.Errorf("departmentId2 invalid")
-	}
-	if employee.CompanyID != employee2.CompanyID {
-		t.Errorf("companyId2 invalid")
 	}
 
 }

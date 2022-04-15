@@ -63,7 +63,8 @@ func (r *mutationResolver) CreateEmployee(ctx context.Context, input model.Creat
 }
 
 func (r *mutationResolver) UpdateEmployee(ctx context.Context, input model.UpdateEmployeeInput) (*model.Employee, error) {
-	employee := database.NewEmployeeUpdate(input.ID, input.Name, string(input.Gender), input.Email, time.Now(), input.DependentsNum, input.IsManager)
+	utc, _ := time.LoadLocation("UTC")
+	employee := database.NewEmployeeUpdate(input.ID, input.Name, string(input.Gender), input.Email, time.Now().In(utc).Format(database.TIMESTAMP_PATTERN), input.DependentsNum, input.IsManager)
 	r.DB.Save(employee)
 	return model.NewEmployee(employee), nil
 }
