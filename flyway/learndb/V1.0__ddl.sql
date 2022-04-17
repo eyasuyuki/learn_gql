@@ -20,7 +20,7 @@ CREATE TABLE employee (
     ,latestLogin_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
     ,dependents_num INT NOT NULL DEFAULT 0
     ,isManager BOOLEAN NOT NULL DEFAULT false
-    ,department_id BIGINT NOT NULL
+    ,department_id BIGINT
     ,company_id BIGINT NOT NULL
 );
 

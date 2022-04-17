@@ -50,7 +50,7 @@ autobind:
 
 # テストを書く
 
-とりあえず ```graph/model/models_test.go````は書いたが、resolverのテストをどう書けば良いのか分からない。
+とりあえず ```graph/model/models_test.go```は書いたが、resolverのテストをどう書けば良いのか分からない。
 
 https://github.com/99designs/gqlgen/blob/master/TESTING.md
 
@@ -67,3 +67,27 @@ https://qiita.com/pocke/items/bfe120f07bd8d94724a7
 https://github.com/timqian/gql-generator
 
 これやってみよう。
+
+### 単一のスキーマファイルにしか対応していない
+
+なので生成できない....
+
+## ```time.Now()```を文字列化してparseするとタイムゾーンが違うのでテストが失敗する
+
+```go
+const TIMESTAMP_PATTERN = "2006-01-02 15:04:05.999999999"
+now := time.Now() // +0900
+nowStr := now.Format(TIMESTAMP_PATTERN) // タイムゾーンつかない
+parsedTime := time.Parse(TIMESTAMP_PATTERN, nowStr) // UTCとしてparseされる
+now == parsedTime // false
+```
+
+## ```Format```の前にUTCにしておく
+
+```go
+utc,_ := time.LoadLocation("UTC")
+nowUtc := time.Now().In(utc)
+nowStr := nowUtc.Format(TIMESTAMP_PATTERN) // UTCに変更されてフォーマットされる
+parsedTime := time.Parse(TIMESTAMP_PATTERN, nowStr)
+nowUtc == parsedTime // true
+```
