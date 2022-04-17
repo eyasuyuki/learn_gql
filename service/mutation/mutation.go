@@ -10,7 +10,7 @@ import (
 // Company
 
 func CreateCompany(db *gorm.DB, input model.CreateCompanyInput) (*model.Company, error) {
-	company := &database.Company{CompanyName: input.CompanyName, PhoneNumber: input.PhoneNumber}
+	company := &database.Company{CompanyName: input.CompanyName, Representative: input.Representative, PhoneNumber: input.PhoneNumber}
 	db.Create(company)
 	result := model.NewCompany(company)
 	return result, nil
@@ -58,7 +58,8 @@ func DeleteDepartment(db *gorm.DB, id string) (bool, error) {
 // Employee
 
 func CreateEmployee(db *gorm.DB, input model.CreateEmployeeInput) (*model.Employee, error) {
-	employee := &database.Employee{Name: input.Name, Gender: string(input.Gender), Email: input.Email, DependentsNum: input.DependentsNum, IsManager: input.IsManager}
+	utc,_ := time.LoadLocation("UTC")
+	employee := &database.Employee{Name: input.Name, Gender: string(input.Gender), Email: input.Email, LatestLoginAt: time.Now().In(utc), DependentsNum: input.DependentsNum, IsManager: input.IsManager}
 	db.Create(employee)
 	return model.NewEmployee(employee), nil
 }
