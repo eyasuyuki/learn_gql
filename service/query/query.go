@@ -11,11 +11,14 @@ func Company(db *gorm.DB, id string) (*model.Company, error) {
 	if err != nil {
 		return nil, err
 	}
-	company := database.Company{}
-	if err := db.Where("id = ?", idInt).Take(&company).Error; err != nil {
+	companies := []database.Company{}
+	if err := db.Where("id = ?", idInt).Limit(1).Find(&companies).Error; err != nil {
 		return nil, err
 	}
-	return model.NewCompany(&company), nil
+	if len(companies) < 1 {
+		return nil, gorm.ErrRecordNotFound
+	}
+	return model.NewCompany(&companies[0]), nil
 }
 
 func Companies(db *gorm.DB, limit int, offset *int) (*model.CompanyPagination, error) {
@@ -50,11 +53,14 @@ func Department(db *gorm.DB, id string) (*model.Department, error) {
 	if err != nil {
 		return nil, err
 	}
-	department := database.Department{}
-	if err := db.Where("id = ?", idInt).Take(&department).Error; err != nil {
+	departments := []database.Department{}
+	if err := db.Where("id = ?", idInt).Limit(1).Find(&departments).Error; err != nil {
 		return nil, err
 	}
-	return model.NewDepartment(&department), nil
+	if len(departments) < 1 {
+		return nil, gorm.ErrRecordNotFound
+	}
+	return model.NewDepartment(&departments[0]), nil
 }
 
 func Departments(db *gorm.DB, limit int, offset *int) (*model.DepartmentPagination, error) {
@@ -89,11 +95,14 @@ func Employee(db *gorm.DB, id string) (*model.Employee, error) {
 	if err != nil {
 		return nil, err
 	}
-	employee := database.Employee{}
-	if err := db.Where("id = ?", idInt).Take(&employee).Error; err != nil {
+	employees := []database.Employee{}
+	if err := db.Where("id = ?", idInt).Limit(1).Find(&employees).Error; err != nil {
 		return nil, err
 	}
-	return model.NewEmployee(&employee), nil
+	if len(employees) < 1 {
+		return nil, gorm.ErrRecordNotFound
+	}
+	return model.NewEmployee(&employees[0]), nil
 }
 
 func Employees(db *gorm.DB, limit int, offset *int, email *string, gender *model.Gender, isManager *bool, hasDepartment *bool) (*model.EmployeePagination, error) {

@@ -217,3 +217,50 @@ func TestDeleteCompany(t *testing.T) {
 		t.Errorf("company delete invalid")
 	}
 }
+
+func TestDeleteDepartment(t *testing.T) {
+	input := createDepartmentInput()
+	department, err := createDepartment(input)
+	if err != nil {
+		panic(any(err))
+	}
+	id := department.ID
+	result, err := DeleteDepartment(db, id)
+	if err != nil {
+		panic(any(err))
+	}
+	if !result {
+		t.Errorf("delete department failed")
+	}
+	department, err = query.Department(db, id)
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
+		t.Errorf("delete failde")
+	}
+	if department != nil {
+		t.Errorf("department delete failed")
+	}
+
+}
+
+func TestDeleteEmployee(t *testing.T) {
+	input := createEmployeeInput()
+	employee, err := createEmployee(input)
+	if err != nil {
+		panic(any(err))
+	}
+	id := employee.ID
+	result, err := DeleteEmployee(db, id)
+	if err != nil {
+		panic(any(err))
+	}
+	if !result {
+		t.Errorf("delete employee failed")
+	}
+	employee, err = query.Employee(db, id)
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
+		t.Errorf("delete failed")
+	}
+	if employee != nil {
+		t.Errorf("employee delete failed")
+	}
+}
