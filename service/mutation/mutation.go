@@ -28,7 +28,9 @@ func DeleteCompany(db *gorm.DB, id string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	db.Delete(&database.Company{}, idInt)
+	if err = db.Where("id = ?", idInt).Delete(&database.Company{}).Error; err != nil {
+		return false, err
+	}
 	return true, nil
 }
 
@@ -51,7 +53,9 @@ func DeleteDepartment(db *gorm.DB, id string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	db.Delete(&database.Department{}, idInt)
+	if err = db.Delete(&database.Department{}, idInt).Error; err != nil {
+		return false, err
+	}
 	return true, nil
 }
 
@@ -76,7 +80,9 @@ func DeleteEmployee(db *gorm.DB, id string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	db.Delete(&database.Employee{}, idInt)
+	if err = db.Delete(&database.Employee{}, idInt).Error; err != nil {
+		return false, err
+	}
 	return true, nil
 }
 

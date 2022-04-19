@@ -1,7 +1,9 @@
 package mutation
 
 import (
+	"errors"
 	"github.com/eyasuyuki/learn_gql/graph/model"
+	"github.com/eyasuyuki/learn_gql/service/query"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"testing"
@@ -119,4 +121,99 @@ func createEmployeeInput() model.CreateEmployeeInput {
 
 func createEmployee(input model.CreateEmployeeInput) (*model.Employee, error) {
 	return CreateEmployee(db, input)
+}
+
+func TestUpdateCompany(t *testing.T) {
+	input := createCompanyInput()
+	company, err := createCompany(input)
+	if err != nil {
+		panic(any(err))
+	}
+	id := company.ID
+	updateCompany := model.UpdateCompanyInput{ID: id, CompanyName: "Toyota motors", Representative: "豊田章男", PhoneNumber: "0565-99-9999"}
+	company, err = UpdateCompany(db, updateCompany)
+	if company.ID != id {
+		t.Errorf("id invadlid")
+	}
+	if company.CompanyName != updateCompany.CompanyName {
+		t.Errorf("companyName invalid")
+	}
+	if company.Representative != updateCompany.Representative {
+		t.Errorf("representative invalid")
+	}
+	if company.PhoneNumber != updateCompany.PhoneNumber {
+		t.Errorf("phoneNumber invalid")
+	}
+}
+
+func TestUpdateDepartment(t *testing.T) {
+	input := createDepartmentInput()
+	department, err := createDepartment(input)
+	if err != nil {
+		panic(any(err))
+	}
+	id := department.ID
+	updateDepartment := model.UpdateDepartmentInput{ID: id, DepartmentName: "中央研究所", Email: "labo@example.com"}
+	department, err = UpdateDepartment(db, updateDepartment)
+	if department.ID != updateDepartment.ID {
+		t.Errorf("id invalid")
+	}
+	if department.DepartmentName != updateDepartment.DepartmentName {
+		t.Errorf("departmentName invalid")
+	}
+	if department.Email != updateDepartment.Email {
+		t.Errorf("email invalid")
+	}
+}
+
+func TestUpdateEmployee(t *testing.T) {
+	input := createEmployeeInput()
+	employee, err := createEmployee(input)
+	if err != nil {
+		panic(any(err))
+	}
+	id := employee.ID
+	updateEmployee := model.UpdateEmployeeInput{ID: id, Name: "賀来賢人", Gender: model.GenderMale, Email: "kaku@example.com", DependentsNum: 2, IsManager: false}
+	employee, err = UpdateEmployee(db, updateEmployee)
+	if err != nil {
+		panic(any(err))
+	}
+	if employee.ID != updateEmployee.ID {
+		t.Errorf("id invalid")
+	}
+	if employee.Gender != updateEmployee.Gender {
+		t.Errorf("gender invalid")
+	}
+	if employee.Name != updateEmployee.Name {
+		t.Errorf("name invalid")
+	}
+	if employee.DependentsNum != updateEmployee.DependentsNum {
+		t.Errorf("dependentsNum invalid")
+	}
+	if employee.IsManager != updateEmployee.IsManager {
+		t.Errorf("isManager invalid")
+	}
+}
+
+func TestDeleteCompany(t *testing.T) {
+	input := createCompanyInput()
+	company, err := createCompany(input)
+	if err != nil {
+		panic(any(err))
+	}
+	id := company.ID
+	result, err := DeleteCompany(db, id)
+	if err != nil {
+		panic(any(err))
+	}
+	if !result {
+		t.Errorf("delete company failed")
+	}
+	company, err = query.Company(db, id)
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
+		t.Errorf("delete failed")
+	}
+	if company != nil {
+		t.Errorf("company delete invalid")
+	}
 }
