@@ -35,16 +35,15 @@ func Companies(db *gorm.DB, limit int, offset *int) (*model.CompanyPagination, e
 		return nil, err
 	}
 	pageInfo := &model.PaginationInfo{}
-	var nodes []*model.Company
-	result := &model.CompanyPagination{PageInfo: pageInfo, Nodes: nodes}
+	result := &model.CompanyPagination{PageInfo: pageInfo, Nodes: []*model.Company{}}
 	for _, company := range companies {
-		nodes = append(nodes, model.NewCompany(&company))
+		result.Nodes = append(result.Nodes, model.NewCompany(&company))
 	}
 	pageInfo.Page = 1
 	if offset != nil {
 		pageInfo.Page = ((int(total) - *offset) / limit) + 1
 	}
-	pageInfo.Count = len(nodes)
+	pageInfo.Count = len(result.Nodes)
 	return result, nil
 }
 
@@ -77,16 +76,15 @@ func Departments(db *gorm.DB, limit int, offset *int) (*model.DepartmentPaginati
 		return nil, err
 	}
 	pageInfo := &model.PaginationInfo{}
-	var nodes []*model.Department
-	result := &model.DepartmentPagination{PageInfo: pageInfo, Nodes: nodes}
+	result := &model.DepartmentPagination{PageInfo: pageInfo, Nodes: []*model.Department{}}
 	for _, Department := range departments {
-		nodes = append(nodes, model.NewDepartment(&Department))
+		result.Nodes = append(result.Nodes, model.NewDepartment(&Department))
 	}
 	pageInfo.Page = 1
 	if offset != nil {
 		pageInfo.Page = ((int(total) - *offset) / limit) + 1
 	}
-	pageInfo.Count = len(nodes)
+	pageInfo.Count = len(result.Nodes)
 	return result, nil
 }
 
@@ -133,15 +131,14 @@ func Employees(db *gorm.DB, limit int, offset *int, email *string, gender *model
 		return nil, err
 	}
 	pageInfo := &model.PaginationInfo{}
-	var nodes []*model.Employee
-	result := &model.EmployeePagination{PageInfo: pageInfo, Nodes: nodes}
+	result := &model.EmployeePagination{PageInfo: pageInfo, Nodes: []*model.Employee{}}
 	for _, Employee := range employees {
-		nodes = append(nodes, model.NewEmployee(&Employee))
+		result.Nodes = append(result.Nodes, model.NewEmployee(&Employee))
 	}
 	pageInfo.Page = 1
 	if offset != nil {
 		pageInfo.Page = ((int(total) - *offset) / limit) + 1
 	}
-	pageInfo.Count = len(nodes)
+	pageInfo.Count = len(result.Nodes)
 	return result, nil
 }

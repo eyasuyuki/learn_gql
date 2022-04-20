@@ -1,7 +1,6 @@
 package mutation
 
 import (
-	"errors"
 	"github.com/eyasuyuki/learn_gql/graph/model"
 	"github.com/eyasuyuki/learn_gql/service/query"
 	"gorm.io/driver/mysql"
@@ -196,71 +195,101 @@ func TestUpdateEmployee(t *testing.T) {
 }
 
 func TestDeleteCompany(t *testing.T) {
-	input := createCompanyInput()
-	company, err := createCompany(input)
+	companyPagination, err := query.Companies(db, 10000, nil)
 	if err != nil {
 		panic(any(err))
 	}
-	id := company.ID
-	result, err := DeleteCompany(db, id)
+	for _, node := range companyPagination.Nodes {
+		company, err := query.Company(db, node.ID)
+		if err != nil {
+			panic(any(err))
+		}
+		if company == nil || company.ID != node.ID {
+			t.Errorf("query companies failed")
+		}
+		result, err := DeleteCompany(db, node.ID)
+		if err != nil {
+			panic(any(err))
+		}
+		if !result {
+			t.Errorf("delete company failed")
+		}
+	}
+	companyPagination, err = query.Companies(db, 10000, nil)
 	if err != nil {
 		panic(any(err))
 	}
-	if !result {
+	if companyPagination.PageInfo.Count > 0 {
 		t.Errorf("delete company failed")
 	}
-	company, err = query.Company(db, id)
-	if !errors.Is(err, gorm.ErrRecordNotFound) {
-		t.Errorf("delete failed")
-	}
-	if company != nil {
-		t.Errorf("company delete invalid")
+	if len(companyPagination.Nodes) > 0 {
+		t.Errorf("delete company failed")
 	}
 }
 
 func TestDeleteDepartment(t *testing.T) {
-	input := createDepartmentInput()
-	department, err := createDepartment(input)
+	departmentPagination, err := query.Departments(db, 10000, nil)
 	if err != nil {
 		panic(any(err))
 	}
-	id := department.ID
-	result, err := DeleteDepartment(db, id)
+	for _, node := range departmentPagination.Nodes {
+		department, err := query.Department(db, node.ID)
+		if err != nil {
+			panic(any(err))
+		}
+		if department == nil || department.ID != node.ID {
+			t.Error("query departments failed")
+		}
+		result, err := DeleteDepartment(db, department.ID)
+		if err != nil {
+			panic(any(err))
+		}
+		if !result {
+			t.Errorf("delete department failed")
+		}
+	}
+	departmentPagination, err = query.Departments(db, 10000, nil)
 	if err != nil {
 		panic(any(err))
 	}
-	if !result {
-		t.Errorf("delete department failed")
+	if departmentPagination.PageInfo.Count > 0 {
+		t.Errorf("delete departments failed")
 	}
-	department, err = query.Department(db, id)
-	if !errors.Is(err, gorm.ErrRecordNotFound) {
-		t.Errorf("delete failde")
-	}
-	if department != nil {
-		t.Errorf("department delete failed")
+	if len(departmentPagination.Nodes) > 0 {
+		t.Errorf("delete departments failed")
 	}
 
 }
 
 func TestDeleteEmployee(t *testing.T) {
-	input := createEmployeeInput()
-	employee, err := createEmployee(input)
+	employeePagination, err := query.Employees(db, 10000, nil, nil, nil, nil, nil)
 	if err != nil {
 		panic(any(err))
 	}
-	id := employee.ID
-	result, err := DeleteEmployee(db, id)
+	for _, node := range employeePagination.Nodes {
+		employee, err := query.Employee(db, node.ID)
+		if err != nil {
+			panic(any(err))
+		}
+		if employee == nil || employee.ID != node.ID {
+			t.Error("query employees failed")
+		}
+		result, err := DeleteEmployee(db, employee.ID)
+		if err != nil {
+			panic(any(err))
+		}
+		if !result {
+			t.Errorf("delete employee failed")
+		}
+	}
+	employeePagination, err = query.Employees(db, 10000, nil, nil, nil, nil, nil)
 	if err != nil {
 		panic(any(err))
 	}
-	if !result {
+	if employeePagination.PageInfo.Count > 0 {
+		t.Error("delete employee failed")
+	}
+	if len(employeePagination.Nodes) > 0 {
 		t.Errorf("delete employee failed")
-	}
-	employee, err = query.Employee(db, id)
-	if !errors.Is(err, gorm.ErrRecordNotFound) {
-		t.Errorf("delete failed")
-	}
-	if employee != nil {
-		t.Errorf("employee delete failed")
 	}
 }
