@@ -99,3 +99,7 @@ nowUtc == parsedTime // true
 # Mutationにリレーションについての定義がない
 
 ```departments```テーブルは```company_id```列、```employees```テーブルは```department_id```列、```company_id````列を持っているが、誰がこれをupdateするのか分からない。一般的にどう解決しているのだろうか? gqlgenのドキュメントを読む方が早いか?
+
+## Mutationの```xxxInput```定義にリレーションがないのが原因?
+
+結局```mutation.graphqls```の```xxxInput```の定義にリレーションが一切ないのでリレーションに関する定義が生成されないのではなかろうか。
