@@ -91,3 +91,11 @@ nowStr := nowUtc.Format(TIMESTAMP_PATTERN) // UTCに変更されてフォーマ�
 parsedTime := time.Parse(TIMESTAMP_PATTERN, nowStr)
 nowUtc == parsedTime // true
 ```
+
+## テストを書くために実装を```service```パッケージに移動した
+
+実装を```service```パッケージに移動してユニットテストを書いた。
+
+# Mutationにリレーションについての定義がない
+
+```departments```テーブルは```company_id```列、```employees```テーブルは```department_id```列、```company_id````列を持っているが、誰がこれをupdateするのか分からない。一般的にどう解決しているのだろうか? gqlgenのドキュメントを読む方が早いか?
