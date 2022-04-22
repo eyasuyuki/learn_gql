@@ -103,3 +103,13 @@ nowUtc == parsedTime // true
 ## Mutationの```xxxInput```定義にリレーションがないのが原因?
 
 結局```mutation.graphqls```の```xxxInput```の定義にリレーションが一切ないのでリレーションに関する定義が生成されないのではなかろうか。
+
+## Mutationでリレーションを張るディレクティブを増やす
+
+```graphql
+addCompanyToDepartment(id: ID!, companyID: ID!): Department!
+addDepartmentToEmployee(id: ID!, departmentID: ID!): Employee!
+addCompanyToEmployee(id: ID!, companyID: ID!): Employee!
+```
+
+結局こういうのを増やしたけどこれで良かったんだろうか。
