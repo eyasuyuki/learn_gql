@@ -92,6 +92,10 @@ parsedTime := time.Parse(TIMESTAMP_PATTERN, nowStr)
 nowUtc == parsedTime // true
 ```
 
+### MariaDB(MySQL)への接続で```loc=UTC```を指定する
+
+これがないとUTCの値を保存してもデフォルトタイムゾーンの値が返ってくる。
+
 ## テストを書くために実装を```service```パッケージに移動した
 
 実装を```service```パッケージに移動してユニットテストを書いた。
