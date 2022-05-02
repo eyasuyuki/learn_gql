@@ -7,7 +7,7 @@ import (
 )
 
 func Company(db *gorm.DB, id string) (*model.Company, error) {
-	idInt, err := database.IdFromBase64(database.COMPANY_PREFIX, id)
+	idInt, err := database.CompanyIDFromBase64(id)
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +48,7 @@ func Companies(db *gorm.DB, limit int, offset *int) (*model.CompanyPagination, e
 }
 
 func Department(db *gorm.DB, id string) (*model.Department, error) {
-	idInt, err := database.IdFromBase64(database.DEPARTMENT_PREFIX, id)
+	idInt, err := database.DepartmentIDFromBase64(id)
 	if err != nil {
 		return nil, err
 	}
@@ -89,7 +89,7 @@ func Departments(db *gorm.DB, limit int, offset *int) (*model.DepartmentPaginati
 }
 
 func Employee(db *gorm.DB, id string) (*model.Employee, error) {
-	idInt, err := database.IdFromBase64(database.EMPLOYEE_PREFIX, id)
+	idInt, err := database.EmployeeIDFromBase64(id)
 	if err != nil {
 		return nil, err
 	}

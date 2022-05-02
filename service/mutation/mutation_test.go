@@ -12,7 +12,7 @@ var db *gorm.DB
 
 func TestMain(m *testing.M) {
 	// set-up
-	dsn := "learngql:learngql@tcp(127.0.0.1:3306)/learndb?charset=utf8&parseTime=True&loc=Local"
+	dsn := "learngql:learngql@tcp(127.0.0.1:3306)/learndb?charset=utf8&parseTime=True&loc=UTC"
 	var err error
 	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
@@ -121,6 +121,116 @@ func createEmployeeInput() model.CreateEmployeeInput {
 func createEmployee(input model.CreateEmployeeInput) (*model.Employee, error) {
 	return CreateEmployee(db, input)
 }
+
+func TestSetCompanyToDepartment(t *testing.T) {
+	companyInput := createCompanyInput()
+	company, err := createCompany(companyInput)
+	if err != nil {
+		panic(any(err))
+	}
+	departmentInput := createDepartmentInput()
+	department, err  := createDepartment(departmentInput)
+	if err != nil {
+		panic(any(err))
+	}
+	result, err := SetCompanyToDepartment(db, department.ID, company.ID)
+	if err != nil {
+		panic(any(err))
+	}
+	if result.ID != department.ID {
+		t.Errorf("id invalid")
+	}
+	if result.DepartmentName != department.DepartmentName {
+		t.Errorf("departmentName invalid")
+	}
+	if result.Email != department.Email {
+		t.Errorf("email invalid")
+	}
+	if result.CompanyID != company.ID {
+		t.Errorf("campanyId invalid")
+	}
+}
+
+func TestSetDepartmentToEmployee(t *testing.T) {
+	departmentInput := createDepartmentInput()
+	department, err  := createDepartment(departmentInput)
+	if err != nil {
+		panic(any(err))
+	}
+	employeeInput := createEmployeeInput()
+	employee, err := createEmployee(employeeInput)
+	if err != nil {
+		panic(any(err))
+	}
+	result, err := SetDepartmentToEmployee(db, employee.ID, department.ID)
+	if err != nil {
+		panic(any(err))
+	}
+	if result.ID != employee.ID {
+		t.Errorf("id invalid")
+	}
+	if result.Name != employee.Name {
+		t.Errorf("departmentName invalid")
+	}
+	if result.Email != employee.Email {
+		t.Errorf("email invalid")
+	}
+	if result.IsManager != employee.IsManager {
+		t.Errorf("isManager invalid")
+	}
+	if result.LatestLoginAt != employee.LatestLoginAt {
+		t.Errorf("latestLoginAt invalid")
+	}
+	if result.Gender != employee.Gender {
+		t.Error("gender invalid")
+	}
+	if result.DependentsNum != employee.DependentsNum {
+		t.Errorf("dependentsNum invalid")
+	}
+	if result.DepartmentID != department.ID {
+		t.Errorf("departmentIdm wh invalid")
+	}
+}
+
+func TestSetCompanyToEmployee(t *testing.T) {
+	companyInput := createCompanyInput()
+	company, err := createCompany(companyInput)
+	if err != nil {
+		panic(any(err))
+	}
+	employeeInput := createEmployeeInput()
+	employee, err := createEmployee(employeeInput)
+	if err != nil {
+		panic(any(err))
+	}
+	result, err := SetCompanyToEmployee(db, employee.ID, company.ID)
+	if err != nil {
+		panic(any(err))
+	}
+	if result.ID != employee.ID {
+		t.Errorf("id invalid")
+	}
+	if result.Name != employee.Name {
+		t.Errorf("departmentName invalid")
+	}
+	if result.Email != employee.Email {
+		t.Errorf("email invalid")
+	}
+	if result.IsManager != employee.IsManager {
+		t.Errorf("isManager invalid")
+	}
+	if result.LatestLoginAt != employee.LatestLoginAt {
+		t.Errorf("latestLoginAt invalid")
+	}
+	if result.Gender != employee.Gender {
+		t.Error("gender invalid")
+	}
+	if result.DependentsNum != employee.DependentsNum {
+		t.Errorf("dependentsNum invalid")
+	}
+	if result.CompanyID != company.ID {
+		t.Errorf("campanyId invalid")
+	}}
 
 func TestUpdateCompany(t *testing.T) {
 	input := createCompanyInput()

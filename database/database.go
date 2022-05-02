@@ -21,7 +21,7 @@ type Company struct {
 }
 
 func NewCompanyUpdate(id string, companyName string, representative string, phoneNumber string) *Company {
-	idInt, err := IdFromBase64(COMPANY_PREFIX, id)
+	idInt, err := idFromBase64(COMPANY_PREFIX, id)
 	if err != nil {
 		panic(any(err))
 	}
@@ -36,7 +36,7 @@ type Department struct {
 }
 
 func NewDepartmentUpdate(id string, departmentName string, email string) *Department {
-	idInt, err := IdFromBase64(DEPARTMENT_PREFIX, id)
+	idInt, err := idFromBase64(DEPARTMENT_PREFIX, id)
 	if err != nil {
 		panic(any(err))
 	}
@@ -58,7 +58,7 @@ type Employee struct {
 }
 
 func NewEmployeeUpdate(id string, name string, gender string, email string, lastLoginAt string, dependentsNum int, isManager bool) *Employee {
-	idInt, err := IdFromBase64(EMPLOYEE_PREFIX, id)
+	idInt, err := idFromBase64(EMPLOYEE_PREFIX, id)
 	if err != nil {
 		panic(any(err))
 	}
@@ -69,7 +69,19 @@ func NewEmployeeUpdate(id string, name string, gender string, email string, last
 	return &Employee{ID: idInt, Name: name, Gender: gender, Email: email, LatestLoginAt: lastLoginAtTime, DependentsNum: dependentsNum, IsManager: isManager}
 }
 
-func IdFromBase64(prefix string, id string) (int64,error) {
+func CompanyIDFromBase64(id string) (int64, error) {
+	return idFromBase64(COMPANY_PREFIX, id)
+}
+
+func DepartmentIDFromBase64(id string) (int64, error) {
+	return idFromBase64(DEPARTMENT_PREFIX, id)
+}
+
+func EmployeeIDFromBase64(id string) (int64, error) {
+	return idFromBase64(EMPLOYEE_PREFIX, id)
+}
+
+func idFromBase64(prefix string, id string) (int64,error) {
 	out, err := base64.StdEncoding.DecodeString(id)
 	if err != nil {
 		panic(any(err))

@@ -5,6 +5,7 @@ package graph
 
 import (
 	"context"
+
 	"github.com/eyasuyuki/learn_gql/graph/generated"
 	"github.com/eyasuyuki/learn_gql/graph/model"
 	"github.com/eyasuyuki/learn_gql/service/query"

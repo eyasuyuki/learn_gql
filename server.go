@@ -18,7 +18,7 @@ import (
 
 const defaultPort = "8080"
 
-const defaultDsn = "learngql:learngql@tcp(127.0.0.1:3306)/learndb?charset=utf8&parseTime=True&loc=Local"
+const defaultDsn = "learngql:learngql@tcp(127.0.0.1:3306)/learndb?charset=utf8&parseTime=True&loc=UTC"
 
 func main() {
 	port := os.Getenv("PORT")

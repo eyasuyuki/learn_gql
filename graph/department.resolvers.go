@@ -5,10 +5,10 @@ package graph
 
 import (
 	"context"
-	"github.com/eyasuyuki/learn_gql/service/department"
 
 	"github.com/eyasuyuki/learn_gql/graph/generated"
 	"github.com/eyasuyuki/learn_gql/graph/model"
+	"github.com/eyasuyuki/learn_gql/service/department"
 )
 
 func (r *departmentResolver) Company(ctx context.Context, obj *model.Department) (*model.Company, error) {

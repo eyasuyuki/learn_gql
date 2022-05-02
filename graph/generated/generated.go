@@ -92,15 +92,18 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		CreateCompany    func(childComplexity int, input model.CreateCompanyInput) int
-		CreateDepartment func(childComplexity int, input model.CreateDepartmentInput) int
-		CreateEmployee   func(childComplexity int, input model.CreateEmployeeInput) int
-		DeleteCompany    func(childComplexity int, id string) int
-		DeleteDepartment func(childComplexity int, id string) int
-		DeleteEmployee   func(childComplexity int, id string) int
-		UpdateCompany    func(childComplexity int, input model.UpdateCompanyInput) int
-		UpdateDepartment func(childComplexity int, input model.UpdateDepartmentInput) int
-		UpdateEmployee   func(childComplexity int, input model.UpdateEmployeeInput) int
+		CreateCompany           func(childComplexity int, input model.CreateCompanyInput) int
+		CreateDepartment        func(childComplexity int, input model.CreateDepartmentInput) int
+		CreateEmployee          func(childComplexity int, input model.CreateEmployeeInput) int
+		DeleteCompany           func(childComplexity int, id string) int
+		DeleteDepartment        func(childComplexity int, id string) int
+		DeleteEmployee          func(childComplexity int, id string) int
+		SetCompanyToDepartment  func(childComplexity int, id string, companyID string) int
+		SetCompanyToEmployee    func(childComplexity int, id string, companyID string) int
+		SetDepartmentToEmployee func(childComplexity int, id string, departmentID string) int
+		UpdateCompany           func(childComplexity int, input model.UpdateCompanyInput) int
+		UpdateDepartment        func(childComplexity int, input model.UpdateDepartmentInput) int
+		UpdateEmployee          func(childComplexity int, input model.UpdateEmployeeInput) int
 	}
 
 	PaginationInfo struct {
@@ -141,9 +144,12 @@ type MutationResolver interface {
 	CreateDepartment(ctx context.Context, input model.CreateDepartmentInput) (*model.Department, error)
 	UpdateDepartment(ctx context.Context, input model.UpdateDepartmentInput) (*model.Department, error)
 	DeleteDepartment(ctx context.Context, id string) (bool, error)
+	SetCompanyToDepartment(ctx context.Context, id string, companyID string) (*model.Department, error)
 	CreateEmployee(ctx context.Context, input model.CreateEmployeeInput) (*model.Employee, error)
 	UpdateEmployee(ctx context.Context, input model.UpdateEmployeeInput) (*model.Employee, error)
 	DeleteEmployee(ctx context.Context, id string) (bool, error)
+	SetDepartmentToEmployee(ctx context.Context, id string, departmentID string) (*model.Employee, error)
+	SetCompanyToEmployee(ctx context.Context, id string, companyID string) (*model.Employee, error)
 }
 type QueryResolver interface {
 	Company(ctx context.Context, id string) (*model.Company, error)
@@ -422,6 +428,42 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.DeleteEmployee(childComplexity, args["id"].(string)), true
+
+	case "Mutation.setCompanyToDepartment":
+		if e.complexity.Mutation.SetCompanyToDepartment == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_setCompanyToDepartment_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.SetCompanyToDepartment(childComplexity, args["id"].(string), args["companyID"].(string)), true
+
+	case "Mutation.setCompanyToEmployee":
+		if e.complexity.Mutation.SetCompanyToEmployee == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_setCompanyToEmployee_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.SetCompanyToEmployee(childComplexity, args["id"].(string), args["companyID"].(string)), true
+
+	case "Mutation.setDepartmentToEmployee":
+		if e.complexity.Mutation.SetDepartmentToEmployee == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_setDepartmentToEmployee_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.SetDepartmentToEmployee(childComplexity, args["id"].(string), args["departmentID"].(string)), true
 
 	case "Mutation.updateCompany":
 		if e.complexity.Mutation.UpdateCompany == nil {
@@ -712,9 +754,12 @@ type EmployeePagination implements Pagination {
     createDepartment(input: CreateDepartmentInput!): Department!
     updateDepartment(input: UpdateDepartmentInput!): Department!
     deleteDepartment(id: ID!): Boolean!
+    setCompanyToDepartment(id: ID!, companyID: ID!): Department!
     createEmployee(input: CreateEmployeeInput!): Employee!
     updateEmployee(input: UpdateEmployeeInput!): Employee!
     deleteEmployee(id: ID!): Boolean!
+    setDepartmentToEmployee(id: ID!, departmentID: ID!): Employee!
+    setCompanyToEmployee(id: ID!, companyID: ID!): Employee!
 }
 
 input CreateCompanyInput {
@@ -866,6 +911,78 @@ func (ec *executionContext) field_Mutation_deleteEmployee_args(ctx context.Conte
 		}
 	}
 	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_setCompanyToDepartment_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["companyID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("companyID"))
+		arg1, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["companyID"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_setCompanyToEmployee_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["companyID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("companyID"))
+		arg1, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["companyID"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_setDepartmentToEmployee_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["departmentID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("departmentID"))
+		arg1, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["departmentID"] = arg1
 	return args, nil
 }
 
@@ -2282,6 +2399,48 @@ func (ec *executionContext) _Mutation_deleteDepartment(ctx context.Context, fiel
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_setCompanyToDepartment(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_setCompanyToDepartment_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().SetCompanyToDepartment(rctx, args["id"].(string), args["companyID"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Department)
+	fc.Result = res
+	return ec.marshalNDepartment2ᚖgithubᚗcomᚋeyasuyukiᚋlearn_gqlᚋgraphᚋmodelᚐDepartment(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_createEmployee(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -2406,6 +2565,90 @@ func (ec *executionContext) _Mutation_deleteEmployee(ctx context.Context, field 
 	res := resTmp.(bool)
 	fc.Result = res
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_setDepartmentToEmployee(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_setDepartmentToEmployee_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().SetDepartmentToEmployee(rctx, args["id"].(string), args["departmentID"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Employee)
+	fc.Result = res
+	return ec.marshalNEmployee2ᚖgithubᚗcomᚋeyasuyukiᚋlearn_gqlᚋgraphᚋmodelᚐEmployee(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_setCompanyToEmployee(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_setCompanyToEmployee_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().SetCompanyToEmployee(rctx, args["id"].(string), args["companyID"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Employee)
+	fc.Result = res
+	return ec.marshalNEmployee2ᚖgithubᚗcomᚋeyasuyukiᚋlearn_gqlᚋgraphᚋmodelᚐEmployee(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PaginationInfo_page(ctx context.Context, field graphql.CollectedField, obj *model.PaginationInfo) (ret graphql.Marshaler) {
@@ -4985,6 +5228,16 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "setCompanyToDepartment":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_setCompanyToDepartment(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "createEmployee":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createEmployee(ctx, field)
@@ -5008,6 +5261,26 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "deleteEmployee":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_deleteEmployee(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "setDepartmentToEmployee":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_setDepartmentToEmployee(ctx, field)
+			}
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "setCompanyToEmployee":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_setCompanyToEmployee(ctx, field)
 			}
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, innerFunc)

@@ -5,9 +5,12 @@ type Mutation {
     createDepartment(input: CreateDepartmentInput!): Department!
     updateDepartment(input: UpdateDepartmentInput!): Department!
     deleteDepartment(id: ID!): Boolean!
+    setCompanyToDepartment(id: ID!, companyID: ID!): Department!
     createEmployee(input: CreateEmployeeInput!): Employee!
     updateEmployee(input: UpdateEmployeeInput!): Employee!
     deleteEmployee(id: ID!): Boolean!
+    setDepartmentToEmployee(id: ID!, departmentID: ID!): Employee!
+    setCompanyToEmployee(id: ID!, companyID: ID!): Employee!
 }
 
 input CreateCompanyInput {

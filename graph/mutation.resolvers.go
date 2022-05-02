@@ -34,6 +34,10 @@ func (r *mutationResolver) DeleteDepartment(ctx context.Context, id string) (boo
 	return mutation.DeleteDepartment(r.DB, id)
 }
 
+func (r *mutationResolver) SetCompanyToDepartment(ctx context.Context, id string, companyID string) (*model.Department, error) {
+	return mutation.SetCompanyToDepartment(r.DB, id, companyID)
+}
+
 func (r *mutationResolver) CreateEmployee(ctx context.Context, input model.CreateEmployeeInput) (*model.Employee, error) {
 	return mutation.CreateEmployee(r.DB, input)
 }
@@ -44,6 +48,14 @@ func (r *mutationResolver) UpdateEmployee(ctx context.Context, input model.Updat
 
 func (r *mutationResolver) DeleteEmployee(ctx context.Context, id string) (bool, error) {
 	return mutation.DeleteEmployee(r.DB, id)
+}
+
+func (r *mutationResolver) SetDepartmentToEmployee(ctx context.Context, id string, departmentID string) (*model.Employee, error) {
+	return mutation.SetDepartmentToEmployee(r.DB, id, departmentID)
+}
+
+func (r *mutationResolver) SetCompanyToEmployee(ctx context.Context, id string, companyID string) (*model.Employee, error) {
+	return mutation.SetCompanyToEmployee(r.DB, id, companyID)
 }
 
 // Mutation returns generated.MutationResolver implementation.

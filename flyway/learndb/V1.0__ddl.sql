@@ -17,7 +17,7 @@ CREATE TABLE employees (
     ,name TEXT
     ,gender TEXT
     ,email TEXT
-    ,latest_login_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    ,latest_login_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)
     ,dependents_num INT NOT NULL DEFAULT 0
     ,is_manager BOOLEAN NOT NULL DEFAULT false
     ,department_id BIGINT

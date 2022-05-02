@@ -7,12 +7,12 @@ import (
 )
 
 func Department(db *gorm.DB, obj *model.Employee) (*model.Department, error) {
-	idInt, err := database.IdFromBase64(database.DEPARTMENT_PREFIX, obj.DepartmentID)
+	departmentId, err := database.DepartmentIDFromBase64(obj.DepartmentID)
 	if err != nil {
 		return nil, err
 	}
 	var department database.Department
-	if err = db.Find(&department, idInt).Error; err != nil {
+	if err = db.Where("id = ?", departmentId).Find(&department).Error; err != nil {
 		return nil, err
 	}
 	return model.NewDepartment(&department), nil
@@ -20,12 +20,12 @@ func Department(db *gorm.DB, obj *model.Employee) (*model.Department, error) {
 
 
 func Company(db *gorm.DB, obj *model.Employee) (*model.Company, error) {
-	idInt, err := database.IdFromBase64(database.COMPANY_PREFIX, obj.CompanyID)
+	companyId, err := database.CompanyIDFromBase64(obj.CompanyID)
 	if err != nil {
 		return nil, err
 	}
 	var company database.Company
-	if err = db.Find(&company, idInt).Error; err != nil {
+	if err = db.Where("id = ?", companyId).Find(&company).Error; err != nil {
 		return nil, err
 	}
 	return model.NewCompany(&company), nil

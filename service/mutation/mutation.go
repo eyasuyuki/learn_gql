@@ -24,7 +24,7 @@ func UpdateCompany(db *gorm.DB, input model.UpdateCompanyInput) (*model.Company,
 }
 
 func DeleteCompany(db *gorm.DB, id string) (bool, error) {
-	idInt, err := database.IdFromBase64(database.COMPANY_PREFIX, id)
+	idInt, err := database.CompanyIDFromBase64(id)
 	if err != nil {
 		return false, err
 	}
@@ -49,7 +49,7 @@ func UpdateDepartment(db *gorm.DB, input model.UpdateDepartmentInput) (*model.De
 }
 
 func DeleteDepartment(db *gorm.DB, id string) (bool, error) {
-	idInt, err := database.IdFromBase64(database.DEPARTMENT_PREFIX, id)
+	idInt, err := database.DepartmentIDFromBase64(id)
 	if err != nil {
 		return false, err
 	}
@@ -58,6 +58,27 @@ func DeleteDepartment(db *gorm.DB, id string) (bool, error) {
 	}
 	return true, nil
 }
+
+func SetCompanyToDepartment(db *gorm.DB, id string, companyID string) (*model.Department, error) {
+	idInt, err := database.DepartmentIDFromBase64(id)
+	if err != nil {
+		return nil, err
+	}
+	companyIdInt, err := database.CompanyIDFromBase64(companyID)
+	if err != nil {
+		return nil, err
+	}
+	var department database.Department
+	if err = db.Where("id = ?", idInt).Find(&department).Error; err != nil {
+		return nil, err
+	}
+	department.CompanyID = companyIdInt
+	if err = db.Save(&department).Error; err != nil {
+		return nil, err
+	}
+	return model.NewDepartment(&department), nil
+}
+
 
 // Employee
 
@@ -76,7 +97,7 @@ func UpdateEmployee(db *gorm.DB, input model.UpdateEmployeeInput) (*model.Employ
 }
 
 func DeleteEmployee(db *gorm.DB, id string) (bool, error) {
-	idInt, err := database.IdFromBase64(database.EMPLOYEE_PREFIX, id)
+	idInt, err := database.EmployeeIDFromBase64(id)
 	if err != nil {
 		return false, err
 	}
@@ -84,5 +105,45 @@ func DeleteEmployee(db *gorm.DB, id string) (bool, error) {
 		return false, err
 	}
 	return true, nil
+}
+
+func SetDepartmentToEmployee(db *gorm.DB, id string, departmentId string) (*model.Employee, error) {
+	idInt, err := database.EmployeeIDFromBase64(id)
+	if err != nil {
+		return nil, err
+	}
+	departmentIdInt, err := database.DepartmentIDFromBase64(departmentId)
+	if err != nil {
+		return nil, err
+	}
+	var employee database.Employee
+	if err = db.Where("id = ?", idInt).Find(&employee).Error; err != nil {
+		return nil, err
+	}
+	employee.DepartmentID = departmentIdInt
+	if err = db.Save(&employee).Error; err != nil {
+		return nil, err
+	}
+	return model.NewEmployee(&employee), nil
+}
+
+func SetCompanyToEmployee(db *gorm.DB, id string, companyID string) (*model.Employee, error) {
+	idInt, err := database.EmployeeIDFromBase64(id)
+	if err != nil {
+		return nil, err
+	}
+	companyIdInt, err := database.CompanyIDFromBase64(companyID)
+	if err != nil {
+		return nil, err
+	}
+	var employee database.Employee
+	if err = db.Where("id = ?", idInt).Find(&employee).Error; err != nil {
+		return nil, err
+	}
+	employee.CompanyID = companyIdInt
+	if err = db.Save(&employee).Error; err != nil {
+		return nil, err
+	}
+	return model.NewEmployee(&employee), nil
 }
 
