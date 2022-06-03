@@ -22,28 +22,40 @@ func Company(db *gorm.DB, id string) (*model.Company, error) {
 }
 
 func Companies(db *gorm.DB, limit int, offset *int) (*model.CompanyPagination, error) {
-	var companies []database.Company
-	var total int64
-	db.Model(&database.Company{}).Count(&total)
-	var err error
+	// totalCount
+	var totalCount int64
+	db.Model(&database.Company{}).Count(&totalCount)
+
+	// totalPage
+	totalPage := (totalCount + int64(limit)) / int64(limit)
+
+	// page
+	ofs := 0
 	if offset != nil {
-		err = db.Offset(*offset).Limit(limit).Find(&companies).Error
-	} else {
-		err = db.Limit(limit).Find(&companies).Error
+		ofs = *offset
 	}
-	if err != nil {
+	page := (ofs / limit) + 1
+
+	// hasNextPage
+	hasNextPage := int64(page) < totalPage
+	// hasPreviousPage
+	hasPreviousPage := page > 1
+
+	var companies []database.Company
+	var err error
+	d := db
+	if offset != nil {
+		d = d.Offset(*offset)
+	}
+	if err = d.Limit(limit).Find(&companies).Error; err != nil {
 		return nil, err
 	}
-	pageInfo := &model.PaginationInfo{}
+
+	pageInfo := &model.PaginationInfo{Page: page, PaginationLength: limit, HasNextPage: hasNextPage, HasPreviousPage: hasPreviousPage, Count: len(companies), TotalCount: int(totalCount)}
 	result := &model.CompanyPagination{PageInfo: pageInfo, Nodes: []*model.Company{}}
 	for _, company := range companies {
 		result.Nodes = append(result.Nodes, model.NewCompany(&company))
 	}
-	pageInfo.Page = 1
-	if offset != nil {
-		pageInfo.Page = ((int(total) - *offset) / limit) + 1
-	}
-	pageInfo.Count = len(result.Nodes)
 	return result, nil
 }
 
@@ -63,9 +75,26 @@ func Department(db *gorm.DB, id string) (*model.Department, error) {
 }
 
 func Departments(db *gorm.DB, limit int, offset *int) (*model.DepartmentPagination, error) {
+	// totalCount
+	var totalCount int64
+	db.Model(&database.Department{}).Count(&totalCount)
+
+	// totalPage
+	totalPage := (totalCount / int64(limit)) / int64(limit)
+
+	// page
+	ofs := 0
+	if offset != nil {
+		ofs = *offset
+	}
+	page := (ofs / limit) + 1
+
+	// hasNextPage
+	hasNextPage := int64(page) < totalPage
+	// hasPreviousPage
+	hasPreviousPage := page > 1
+
 	var departments []database.Department
-	var total int64
-	db.Model(&database.Department{}).Count(&total)
 	var err error
 	if offset != nil {
 		err = db.Offset(*offset).Limit(limit).Find(&departments).Error
@@ -75,16 +104,11 @@ func Departments(db *gorm.DB, limit int, offset *int) (*model.DepartmentPaginati
 	if err != nil {
 		return nil, err
 	}
-	pageInfo := &model.PaginationInfo{}
+	pageInfo := &model.PaginationInfo{Page: page, PaginationLength: limit, HasNextPage: hasNextPage, HasPreviousPage: hasPreviousPage, Count: len(departments), TotalCount: int(totalCount)}
 	result := &model.DepartmentPagination{PageInfo: pageInfo, Nodes: []*model.Department{}}
 	for _, Department := range departments {
 		result.Nodes = append(result.Nodes, model.NewDepartment(&Department))
 	}
-	pageInfo.Page = 1
-	if offset != nil {
-		pageInfo.Page = ((int(total) - *offset) / limit) + 1
-	}
-	pageInfo.Count = len(result.Nodes)
 	return result, nil
 }
 
@@ -104,6 +128,25 @@ func Employee(db *gorm.DB, id string) (*model.Employee, error) {
 }
 
 func Employees(db *gorm.DB, limit int, offset *int, email *string, gender *model.Gender, isManager *bool, hasDepartment *bool) (*model.EmployeePagination, error) {
+	// totalCount
+	var totalCount int64
+	db.Model(&database.Employee{}).Count(&totalCount)
+
+	// totalPage
+	totalPage := (totalCount + int64(limit)) / int64(limit)
+
+	// page
+	ofs := 0
+	if offset != nil {
+		ofs = *offset
+	}
+	page := (ofs / limit) + 1
+
+	// hasNextPage
+	hasNextPage := int64(page) < totalPage
+	// hasPreviousPage
+	hasPreviousPage := page > 1
+
 	var employees []database.Employee
 	var total int64
 	q := db.Limit(limit)
@@ -130,15 +173,11 @@ func Employees(db *gorm.DB, limit int, offset *int, email *string, gender *model
 	if err := q.Find(&employees).Error; err != nil {
 		return nil, err
 	}
-	pageInfo := &model.PaginationInfo{}
+
+	pageInfo := &model.PaginationInfo{Page: page, PaginationLength: limit, HasNextPage: hasNextPage, HasPreviousPage: hasPreviousPage, Count: len(employees), TotalCount: int(totalCount)}
 	result := &model.EmployeePagination{PageInfo: pageInfo, Nodes: []*model.Employee{}}
 	for _, Employee := range employees {
 		result.Nodes = append(result.Nodes, model.NewEmployee(&Employee))
 	}
-	pageInfo.Page = 1
-	if offset != nil {
-		pageInfo.Page = ((int(total) - *offset) / limit) + 1
-	}
-	pageInfo.Count = len(result.Nodes)
 	return result, nil
 }
